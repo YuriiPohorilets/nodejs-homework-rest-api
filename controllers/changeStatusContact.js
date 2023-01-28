@@ -1,7 +1,7 @@
-const { updateContact } = require('../models/contacts');
+const { updateStatusContact } = require('../models/contacts');
 const { schema } = require('../schemas/joiSchema');
 
-const changeContact = async (req, res) => {
+const changeStatusContact = async (req, res) => {
   try {
     const { error } = schema.validate(req.body);
     if (error) {
@@ -10,7 +10,12 @@ const changeContact = async (req, res) => {
 
     const { contactId } = req.params;
     const contact = req.body;
-    const updatedContact = await updateContact(contactId, contact);
+
+    if (!contact) {
+      return res.status(400).json({ message: `Missing field favorite` });
+    }
+
+    const updatedContact = await updateStatusContact(contactId, contact);
 
     !updatedContact
       ? res.status(404).json({ message: `Contact by ID ${contactId}: not found` })
@@ -21,5 +26,5 @@ const changeContact = async (req, res) => {
 };
 
 module.exports = {
-  changeContact,
+  changeStatusContact,
 };

@@ -7,9 +7,8 @@ const createContact = async (req, res) => {
     if (error) {
       return res.status(500).json({ message: 'Missing required name field' });
     }
-
-    const { name, email, phone } = req.body;
-    const newContact = await addContact({ name, email, phone });
+    const contact = req.body;
+    const newContact = await addContact(contact);
 
     res.status(201).json(newContact);
   } catch (error) {

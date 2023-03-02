@@ -7,11 +7,11 @@ const findUserByEmail = async ({ email }) => {
   return user;
 };
 
-const registerNewUser = async ({ email, password }) => {
+const registerNewUser = async ({ email, password, verificationToken }) => {
   const avatarURL = gravatar.url(email);
-  const newUser = await new User({ email, password, avatarURL });
+  const newUser = await new User({ email, password, avatarURL, verificationToken });
   newUser.setPassword(password);
-  newUser.save();
+  await newUser.save();
 
   return newUser;
 };
@@ -57,6 +57,15 @@ const updateUserAvatar = async (_id, avatarURL) => {
   return updatedAvatar;
 };
 
+const findUserByVerifyToken = async ({ verificationToken }) => {
+  const user = await User.findOne({ verificationToken });
+  return user;
+};
+
+const verifyUser = async _id => {
+  await User.findByIdAndUpdate(_id, { verify: true, verificationToken: null });
+};
+
 module.exports = {
   findUserByEmail,
   registerNewUser,
@@ -65,4 +74,6 @@ module.exports = {
   loginUser,
   updateSubscription,
   updateUserAvatar,
+  findUserByVerifyToken,
+  verifyUser,
 };

@@ -15,6 +15,10 @@ const logInUser = asyncHandler(async (req, res) => {
     return res.status(401).json({ message: 'Email or password is wrong' });
   }
 
+  if (!user.verify) {
+    return res.status(401).json({ message: 'Email is not verify' });
+  }
+
   const token = await createToken(user);
   await loginUser(user._id, token);
 
